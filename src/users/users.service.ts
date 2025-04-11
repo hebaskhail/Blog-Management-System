@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,16 +24,24 @@ export class UsersService {
     return await this.userRepository.find();
   }
 
-  async findOne(email: string): Promise<User | undefined> {
+  async findById(id: string): Promise<User | undefined> {
     const user = await this.userRepository.findOne({
-      where: { email },
+      where: { id },
     });
-    if (!user) throw new NotFoundException('User not found');
+
+    if (!user) throw new NotFoundException('User Not Found');
     return user;
   }
 
-  async update(email: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findOne(email);
+  async findByEmail(email: string): Promise<User | undefined> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+    });
+    return user;
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.findById(id);
 
     if (updateUserDto.role && user.role !== 'admin') {
       throw new ForbiddenException('Only admin can change roles');
@@ -39,8 +51,8 @@ export class UsersService {
     return await this.userRepository.save(updated);
   }
 
-  async softDelete(email: string): Promise<void> {
-    const user = await this.findOne(email);
+  async softDelete(id: string): Promise<void> {
+    const user = await this.findById(id);
     user.isDeleted = true;
     await this.userRepository.save(user);
   }

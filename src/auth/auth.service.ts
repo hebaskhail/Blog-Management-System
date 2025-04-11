@@ -21,7 +21,7 @@ export class AuthService {
   async register(registerUserDto: RegisterUserDto): Promise<AuthResponseDto> {
     const { email, password, ...rest } = registerUserDto;
 
-    const existingUser = await this.usersService.findOne(email);
+    const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
       throw new ConflictException('Email already exists');
     }
@@ -56,7 +56,7 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<AuthResponseDto> {
     const { email, password } = loginDto;
 
-    const user = await this.usersService.findOne(email);
+    const user = await this.usersService.findByEmail(email);
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -85,6 +85,9 @@ export class AuthService {
       email: user.email,
       role: user.role,
     };
-    return this.jwtService.sign(payload);
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET,
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
   }
 }

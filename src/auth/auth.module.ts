@@ -6,17 +6,26 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [UsersModule,
-    ConfigModule, 
+  imports: [
+    UsersModule,
+    ConfigModule,
     JwtModule.registerAsync({
-      imports: [ConfigModule], // allow access to config
+      imports: [ConfigModule], 
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get<string>('JWT_SECRET'),
-        signOptions: {
-          expiresIn: configService.get<string>('JWT_EXPIRES_IN'),
-        },
-      }),
+      useFactory: async (configService: ConfigService) => {
+        const secret = configService.get<string>('JWT_SECRET');
+        const expiresIn = configService.get<string>('JWT_EXPIRES_IN');
+        
+        console.log('JWT_SECRET:', secret);  // Log to check the value of JWT_SECRET
+        console.log('JWT_EXPIRES_IN:', expiresIn);  // Log to check the value of JWT_EXPIRES_IN
+
+        return {
+          secret,
+          signOptions: {
+            expiresIn,
+          },
+      }
+    },
     }),
   ],
   controllers: [AuthController],

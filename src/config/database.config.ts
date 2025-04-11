@@ -13,7 +13,7 @@ export const getTypeOrmConfig = (
     password: configService.get<string>('DB_PASSWORD'),
     database: configService.get<string>('DB_NAME'),
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-    synchronize: configService.get<boolean>('DB_SYNCHRONIZE', false),
+    synchronize: configService.get<string>('NODE_ENV') === 'development',
     ssl: isSslEnabled ? { rejectUnauthorized: false } : false,
   };
 };

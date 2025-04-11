@@ -4,7 +4,9 @@ import { Transform } from 'class-transformer';
 
 export class FindBlogsDto {
   @IsOptional()
-  @Transform(({ value }) => value?.split(','))
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.split(',') : value,
+  )
   @IsEnum(BlogTag, { each: true })
   readonly tags?: BlogTag[];
 

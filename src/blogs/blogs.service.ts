@@ -17,16 +17,9 @@ export class BlogsService {
     @InjectRepository(Blog) private readonly blogRepository: Repository<Blog>,
   ) {}
   async create(createBlogDto: CreateBlogDto, authorId: string) {
-    const tags = createBlogDto.tags.map((tag) => {
-      if (!(tag in BlogTag)) {
-        throw new BadRequestException(`Invalid tag: ${tag}`);
-      }
-      return tag;
-    });
 
     const blog = this.blogRepository.create({
       ...createBlogDto,
-      tags,
       author: { id: authorId },
     });
 
