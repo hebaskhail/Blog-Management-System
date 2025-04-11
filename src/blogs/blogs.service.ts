@@ -14,17 +14,17 @@ import { FindBlogsDto } from './dto/find-blogs.dto';
 @Injectable()
 export class BlogsService {
   constructor(
-    @InjectRepository(Blog) private blogRepository: Repository<Blog>,
+    @InjectRepository(Blog) private readonly blogRepository: Repository<Blog>,
   ) {}
   async create(createBlogDto: CreateBlogDto, authorId: string) {
     const tags = createBlogDto.tags.map((tag) => {
       if (!(tag in BlogTag)) {
         throw new BadRequestException(`Invalid tag: ${tag}`);
       }
-      return tag as BlogTag;
+      return tag;
     });
 
-    const blog = await this.blogRepository.create({
+    const blog = this.blogRepository.create({
       ...createBlogDto,
       tags,
       author: { id: authorId },

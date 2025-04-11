@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Req,
@@ -18,8 +17,8 @@ import { UpdateBlogDto } from './dto/update-blog.dto';
 import { ExtendedRequest } from 'src/types/express';
 import { PaginationInterceptor } from '../common/interceptors/pagination.interceptor';
 import { FindBlogsDto } from './dto/find-blogs.dto';
-import { Roles } from 'src/common/decorators/roles.decorator'; // Custom roles decorator
-import { RolesGuard } from 'src/common/guards/roles.guard'; // Roles guard
+import { Roles } from 'src/common/decorators/roles.decorator'; 
+import { RolesGuard } from 'src/common/guards/roles.guard'; 
 
 @Controller('blogs')
 export class BlogsController {
@@ -56,7 +55,7 @@ export class BlogsController {
   }
 
   @Delete(':id')
-  @Roles('admin') // Only Admin can delete
+  @Roles('admin') 
   @UseGuards(RolesGuard)
   delete(@Param('id') id: string) {
     return this.blogsService.delete(id);

@@ -1,4 +1,4 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { IsEnum } from 'class-validator';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Blog } from '../../blogs/entities/blog.entity';
@@ -25,7 +25,7 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Blog, (blog) => blog.author)
   blogs: Blog[];
-  
+
   @Column({ default: false })
   isDeleted: boolean;
 }
